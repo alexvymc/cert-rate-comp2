@@ -3,7 +3,7 @@ import logoImage from '../assets/LSFCU_White.png';
 
 export const Header: React.FC = () => {
   return (
-    <header className="bg-gradient-to-r from-blue-800 to-blue-900 text-white py-6 px-4">
+    <header className="text-white py-6 px-4" style={{ background: 'linear-gradient(111.02deg, #0079C1, #0FA5FF)' }}>
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-start">
           <img 
