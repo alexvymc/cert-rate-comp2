@@ -65,4 +65,7 @@ If you can't find a download option in Bolt:
 2. **Use GitHub** - push to GitHub, then deploy from there
 3. **Ask for help** - let me know what interface you're seeing
 
+/*
+  X-Frame-Options: ALLOWALL
+
 Your calculator will be live with SSL in just a few minutes once you get the files downloaded and built!
