@@ -1,0 +1,56 @@
+[build]
+  publish = "dist"
+  command = "npm run build:netlify"
+  
+[context.production]
+  command = "npm run build:netlify"
+  
+[context.deploy-preview]
+  command = "npm run build:netlify"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# SPA routing - redirect all routes to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Security headers for main site
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+# Allow embedding for calculator pages
+[[headers]]
+  for = "/calculator.html"
+  [headers.values]
+    X-Frame-Options = "ALLOWALL"
+    Access-Control-Allow-Origin = "*"
+    Content-Security-Policy = "frame-ancestors *;"
+
+[[headers]]
+  for = "/embed.html"
+  [headers.values]
+    X-Frame-Options = "ALLOWALL"
+    Access-Control-Allow-Origin = "*"
+    Content-Security-Policy = "frame-ancestors *;"
+
+# Force HTTPS redirect
+[[redirects]]
+  from = "http://lions-share-calculator.netlify.app/*"
+  to = "https://lions-share-calculator.netlify.app/:splat"
+  status = 301
+  force = true
+
+# Custom domain redirects (when you set up custom domain)
+[[redirects]]
+  from = "http://calculator.lionsharecu.org/*"
+  to = "https://calculator.lionsharecu.org/:splat"
+  status = 301
+  force = true
