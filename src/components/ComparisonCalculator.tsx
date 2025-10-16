@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
-import { ComparisonRate, ComparisonResult } from '../types/rates';
+import React, { useState, useMemo, useEffect } from 'react';
+import { ComparisonRate, ComparisonResult, CertificateRate } from '../types/rates';
 import { Calculator, DollarSign, Plus, X, TrendingUp, Award } from 'lucide-react';
+import { fetchCertificateRates } from '../services/ratesService';
 
 const RATE_COLORS = [
   '#3B82F6', // Blue
@@ -11,18 +12,6 @@ const RATE_COLORS = [
   '#06B6D4', // Cyan
   '#F97316', // Orange
   '#84CC16', // Lime
-];
-
-// Lions Share FCU Certificate Rates
-const LIONS_SHARE_RATES = [
-  { name: '6 Month Certificate', termMonths: 6, rate: 3.78, apy: 3.85 },
-  { name: '18 Month Certificate', termMonths: 18, rate: 3.88, apy: 3.95 },
-  { name: '36 Month Certificate', termMonths: 36, rate: 3.70, apy: 3.76 },
-  { name: '48 Month Certificate', termMonths: 48, rate: 3.25, apy: 3.30 },
-  { name: 'Save-To-Win Certificate', termMonths: 12, rate: 3.45, apy: 3.50 },
-  { name: 'Add-On Certificate', termMonths: 12, rate: 3.93, apy: 4.00 },
-  { name: 'Bump-Up Certificate', termMonths: 24, rate: 3.64, apy: 3.70 },
-  { name: 'Mini Jumbo Certificate', termMonths: 60, rate: 3.30, apy: 3.35 },
 ];
 
 export const ComparisonCalculator: React.FC = () => {
@@ -44,6 +33,22 @@ export const ComparisonCalculator: React.FC = () => {
       color: RATE_COLORS[1]
     }
   ]);
+  const [lionsShareRates, setLionsShareRates] = useState<CertificateRate[]>([]);
+  const [isLoadingRates, setIsLoadingRates] = useState(true);
+
+  useEffect(() => {
+    const loadRates = async () => {
+      try {
+        const fetchedRates = await fetchCertificateRates();
+        setLionsShareRates(fetchedRates);
+      } catch (error) {
+        console.error('Failed to load certificate rates:', error);
+      } finally {
+        setIsLoadingRates(false);
+      }
+    };
+    loadRates();
+  }, []);
 
   const calculateEarnings = (principal: number, apy: number, termMonths: number) => {
     const monthlyRate = apy / 100 / 12;
@@ -213,24 +218,29 @@ export const ComparisonCalculator: React.FC = () => {
                       <select
                         value={`${rate.rate}-${rate.apy}`}
                         onChange={(e) => {
-                          const selectedRate = LIONS_SHARE_RATES.find(r => 
+                          const selectedRate = lionsShareRates.find(r =>
                             `${r.rate}-${r.apy}` === e.target.value
                           );
                           if (selectedRate) {
                             updateRate(rate.id, 'rate', selectedRate.rate);
                             updateRate(rate.id, 'apy', selectedRate.apy);
                             // Auto-update term to match the certificate
-                            setTermMonths(selectedRate.termMonths.toString());
+                            const termMonths = parseInt(selectedRate.term);
+                            setTermMonths(termMonths.toString());
                           }
                         }}
                         className="w-full px-3 py-2 border border-gray-300 rounded focus:border-blue-500 focus:outline-none"
+                        disabled={isLoadingRates}
                       >
-                        <option value="">Select a Lions Share Certificate</option>
-                        {LIONS_SHARE_RATES.map((lsRate, idx) => (
-                          <option key={idx} value={`${lsRate.rate}-${lsRate.apy}`}>
-                            {lsRate.name} - {lsRate.rate}% Rate / {lsRate.apy}% APY ({lsRate.termMonths} mo)
-                          </option>
-                        ))}
+                        <option value="">{isLoadingRates ? 'Loading rates...' : 'Select a Lions Share Certificate'}</option>
+                        {lionsShareRates.map((lsRate, idx) => {
+                          const termMonths = parseInt(lsRate.term);
+                          return (
+                            <option key={idx} value={`${lsRate.rate}-${lsRate.apy}`}>
+                              {lsRate.name} - {lsRate.rate}% Rate / {lsRate.apy}% APY ({termMonths} mo)
+                            </option>
+                          );
+                        })}
                       </select>
                     </div>
                   ) : (
