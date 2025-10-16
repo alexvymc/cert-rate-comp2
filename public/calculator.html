@@ -250,9 +250,8 @@
                                                 ${rate.institutionName === 'Lions Share FCU' ? `
                                                     <div>
                                                         <select
-                                                            value="${rate.rate}-${rate.apy}"
                                                             onchange="
-                                                                const selectedRate = ${JSON.stringify(LIONS_SHARE_RATES)}.find(r => 
+                                                                const selectedRate = ${JSON.stringify(LIONS_SHARE_RATES)}.find(r =>
                                                                     r.rate + '-' + r.apy === this.value
                                                                 );
                                                                 if (selectedRate) {
@@ -265,11 +264,15 @@
                                                             class="w-full px-3 py-2 border border-gray-300 rounded focus:border-blue-500 focus:outline-none text-sm"
                                                         >
                                                             <option value="">Select a Lions Share Certificate</option>
-                                                            ${LIONS_SHARE_RATES.map(lsRate => `
-                                                                <option value="${lsRate.rate}-${lsRate.apy}">
+                                                            ${LIONS_SHARE_RATES.map(lsRate => {
+                                                                const optionValue = lsRate.rate + '-' + lsRate.apy;
+                                                                const currentValue = rate.rate + '-' + rate.apy;
+                                                                const isSelected = optionValue === currentValue;
+                                                                return `
+                                                                <option value="${optionValue}" ${isSelected ? 'selected' : ''}>
                                                                     ${lsRate.name} - ${lsRate.rate}% Rate / ${lsRate.apy}% APY (${lsRate.termMonths} mo)
                                                                 </option>
-                                                            `).join('')}
+                                                            `}).join('')}
                                                         </select>
                                                     </div>
                                                 ` : `
