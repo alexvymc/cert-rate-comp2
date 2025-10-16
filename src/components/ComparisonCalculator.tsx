@@ -40,6 +40,7 @@ export const ComparisonCalculator: React.FC = () => {
     const loadRates = async () => {
       try {
         const fetchedRates = await fetchCertificateRates();
+        console.log('Fetched Lions Share Rates:', fetchedRates);
         setLionsShareRates(fetchedRates);
       } catch (error) {
         console.error('Failed to load certificate rates:', error);
