@@ -20,7 +20,7 @@ Copy and paste this sample data starting from Row 2:
 36 Month Certificate	36	500	3.70	3.76	false		
 48 Month Certificate	48	500	3.25	3.30	false		
 Save-To-Win Certificate	12	25	3.45	3.50	true	Quarterly prize drawings for savers	
-Add-On Certificate	12	500	3.93	4.00	true	Add more funds anytime during the term	
+Add-On Certificate	12	500	3.94	4.00	true	Add more funds anytime during the term	
 Bump-Up Certificate	24	500	3.64	3.70	true	Option to raise rate once per term if rates increase	
 Mini Jumbo Certificate	60	10000	3.30	3.35	true	Higher minimum deposit for premium rates	
 ```
