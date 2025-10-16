@@ -152,11 +152,13 @@
                 }
             }
 
-            updateRate(id, field, value) {
-                this.rates = this.rates.map(rate => 
+            updateRate(id, field, value, skipRender = false) {
+                this.rates = this.rates.map(rate =>
                     rate.id === id ? { ...rate, [field]: value } : rate
                 );
-                this.render();
+                if (!skipRender) {
+                    this.render();
+                }
             }
 
             render() {
@@ -255,8 +257,8 @@
                                                                     r.rate + '-' + r.apy === this.value
                                                                 );
                                                                 if (selectedRate) {
-                                                                    calculator.updateRate('${rate.id}', 'rate', selectedRate.rate);
-                                                                    calculator.updateRate('${rate.id}', 'apy', selectedRate.apy);
+                                                                    calculator.updateRate('${rate.id}', 'rate', selectedRate.rate, true);
+                                                                    calculator.updateRate('${rate.id}', 'apy', selectedRate.apy, true);
                                                                     calculator.termMonths = selectedRate.termMonths.toString();
                                                                     calculator.render();
                                                                 }
