@@ -19,8 +19,8 @@ export const mockCertificateRates: CertificateRate[] = [
     name: '18 Month Certificate',
     term: '18 months',
     minimumDeposit: 500,
-    apy: 3.95,
-    rate: 3.88,
+    apy: 4.05,
+    rate: 3.99,
     isSpecialty: false
   },
   {
@@ -28,8 +28,8 @@ export const mockCertificateRates: CertificateRate[] = [
     name: '36 Month Certificate',
     term: '36 months',
     minimumDeposit: 500,
-    apy: 3.76,
-    rate: 3.70,
+    apy: 3.85,
+    rate: 3.8,
     isSpecialty: false
   },
   {
@@ -37,8 +37,8 @@ export const mockCertificateRates: CertificateRate[] = [
     name: '48 Month Certificate',
     term: '48 months',
     minimumDeposit: 500,
-    apy: 3.30,
-    rate: 3.25,
+    apy: 3.55,
+    rate: 3.5,
     isSpecialty: false
   },
   // Specialty Share Certificates
@@ -47,8 +47,8 @@ export const mockCertificateRates: CertificateRate[] = [
     name: 'Save-To-Win Certificate',
     term: '12 months',
     minimumDeposit: 25,
-    apy: 3.50,
-    rate: 3.45,
+    apy: 3.55,
+    rate: 3.5,
     isSpecialty: true,
     specialFeatures: 'Quarterly prize drawings for savers'
   },
@@ -57,8 +57,8 @@ export const mockCertificateRates: CertificateRate[] = [
     name: 'Add-On Certificate',
     term: '12 months',
     minimumDeposit: 500,
-    apy: 4.00,
-    rate: 3.93,
+    apy: 4.05,
+    rate: 3.99,
     isSpecialty: true,
     specialFeatures: 'Add more funds anytime during the term'
   },
@@ -67,8 +67,8 @@ export const mockCertificateRates: CertificateRate[] = [
     name: 'Bump-Up Certificate',
     term: '24 months',
     minimumDeposit: 500,
-    apy: 3.70,
-    rate: 3.64,
+    apy: 3.75,
+    rate: 3.7,
     isSpecialty: true,
     specialFeatures: 'Option to raise rate once per term if rates increase'
   },
@@ -77,8 +77,8 @@ export const mockCertificateRates: CertificateRate[] = [
     name: 'Mini Jumbo Certificate',
     term: '60 months',
     minimumDeposit: 10000,
-    apy: 3.35,
-    rate: 3.30,
+    apy: 3.55,
+    rate: 3.5,
     isSpecialty: true,
     specialFeatures: 'Higher minimum deposit for premium rates'
   }
@@ -99,14 +99,24 @@ const convertSheetRowToCertificate = (row: SheetRow & { id: string }): Certifica
 };
 
 export const fetchCertificateRates = async (): Promise<CertificateRate[]> => {
+  console.log('fetchCertificateRates called');
+  console.log('API Key exists:', !!import.meta.env.VITE_GOOGLE_SHEETS_API_KEY);
+  console.log('Sheet ID exists:', !!import.meta.env.VITE_GOOGLE_SHEET_ID);
+
   try {
     // Try to fetch from Google Sheets first
     if (import.meta.env.VITE_GOOGLE_SHEETS_API_KEY && import.meta.env.VITE_GOOGLE_SHEET_ID) {
+      console.log('Attempting to fetch from Google Sheets...');
       const sheetRows = await googleSheetsService.getCertificateRates();
-      
+      console.log('Received sheet rows:', sheetRows);
+
       if (sheetRows.length > 0) {
-        return sheetRows.map(convertSheetRowToCertificate);
+        const converted = sheetRows.map(convertSheetRowToCertificate);
+        console.log('Converted to certificates:', converted);
+        return converted;
       }
+    } else {
+      console.log('Missing API credentials, using mock data');
     }
   } catch (error) {
     if (error instanceof Error && error.message.includes('not publicly accessible')) {
@@ -115,8 +125,9 @@ export const fetchCertificateRates = async (): Promise<CertificateRate[]> => {
       console.warn('Failed to fetch from Google Sheets, using mock data:', error);
     }
   }
-  
+
   // Fallback to mock data
+  console.log('Using mock certificate rates');
   await new Promise(resolve => setTimeout(resolve, 500));
   return mockCertificateRates;
 };
