@@ -46,7 +46,7 @@ This calculator uses Google Sheets as a database for certificate rates, providin
 
 4. **Make the sheet public** or set up API access:
    - File → Share → Change to "Anyone with the link can view"
-   - Copy the Sheet ID from the URL: `https://docs.google.com/spreadsheets/d/[SHEET_ID]/edit`
+   - Copy the Sheet ID from the URL: `https://docs.google.com/spreadsheets/d/1u7Mrgf7V-x46x8021hS2vQJpnWcGpof2KYCa2C1IqAc/edit?usp=sharing`
 
 ### 2. Google API Setup
 
